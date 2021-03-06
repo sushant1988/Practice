@@ -16,13 +16,14 @@ class LinkList:
         else:
             new_node.next = self.head
             self.head = new_node
-    
+
     def insert_at_rear(self, data):
         new_node = LinkListNode(data)
         if self.rear is None:
             self.head = self.rear = new_node
         else:
-            self.head.next = new_node
+            self.rear.next = new_node
+            self.rear = new_node
 
     def traverse_linklist(self):
         temp = self.head
@@ -34,19 +35,16 @@ class LinkList:
         temp = self.head
         while(temp is not None and temp.data != data):
             temp = temp.next
-        
+
         return temp
 
+    def return_list(self):
+      temp = self.head
+      lst = []
+      while(temp is not None):
+        lst.append(temp.data)
+        temp = temp.next
 
-if __name__== "__main__":
-    lk = LinkList()
-    lk.insert_at_front(2)
-    lk.insert_at_rear(3)
-    lk.insert_at_front(4)
-    lk.insert_at_front(5)
-    lk.traverse_linklist()
-
-    l = lk.find(3)
-    print(l.data)
+      return lst
 
 
