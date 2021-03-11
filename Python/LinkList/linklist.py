@@ -1,3 +1,5 @@
+from collections import deque
+
 class LinkListNode:
   def __init__(self, data):
       self.data = data
@@ -47,21 +49,15 @@ class LinkList:
         self.rear.next = new_node
         self.rear = new_node
 
-  def print_linklist(self):
+  # print link list
+  def __str__(self):
+    data=""
     temp = self.head
-    print("[", end=" ")
     while(temp is not None):
-        print(temp.data, end=" ")
-        temp = temp.next
-    print("]")
+      data += str(temp.data) + "->"
+      temp = temp.next
 
-  def print_linklist(self):
-    temp = self.head
-    print("[", end=" ")
-    while(temp is not None):
-        print(temp.data, end=" ")
-        temp = temp.next
-    print("]")
+    return data[:-2]
 
   def find(self, data):
     temp = self.head
@@ -108,7 +104,7 @@ class LinkList:
   def is_circular_list(self) -> bool:
     if self.head is not None:
       slow: LinkList = self.head
-      fast: LinkList = self.head
+      fast: LinkList = self.head.next
 
       while(fast is not None and fast.next is not None):
         if (slow == fast or fast.next == slow):
@@ -119,6 +115,7 @@ class LinkList:
     return False
 
   ''' Time Complexity = O(1)
+      Space Complexity = Constant
   '''
   def reverse_iterative_linklist(self):
     prev: LinkList = None
@@ -136,9 +133,87 @@ class LinkList:
     pass
 
 
+  ''' Partition linklist by x  CTC 2.4
+  '''
+  def partition_linklist(self, x):
+    head: LinkList = self.head
+    tail: LinkList = self.head
+    temp:LinkList = self.head
 
+    while(temp is not None):
+      next: LinkList = temp.next
+      if(temp.data < 5):
+        temp.next = head
+        head = temp
+      else:
+        tail.next = temp
+        tail = temp
+      temp = next
+    tail.next = None
+    self.head = head
+    pass
 
+  ''' Palindrome : linklist  CTC 2.6
+      find middle element using fast slow pointer and store in stack and
+      then compare second half of linklist with stack
+      space(O(N/2)) and time O(N)
+  '''
+  def is_palindrome(self) -> bool:
+    fast: LinkList = self.head
+    slow: LinkList = self.head
 
+    stack: deque = deque()
+    while(fast is not None and fast.next is not None):
+      stack.append(slow.data)
+      fast = fast.next.next
+      slow = slow.next
 
+    if fast is not None:
+      slow = slow.next
+
+    while (slow is not None):
+      if slow.data != stack.pop():
+        return False
+      slow = slow.next
+
+    return True
+
+  ''' Find Intersection between two different length linklist CTC 2.7
+      Time = O(2(N) + 2(M)), Space = Constant
+  '''
+  @classmethod
+  def find_intersection(cls, link1, link2):
+    temp1: LinkList = link1.head
+    temp2: LinkList = link2.head
+
+    link1_len = 0
+    while(temp1 is not None):
+      link1_len += 1
+      temp1 = temp1.next
+
+    link2_len = 0
+    while(temp2 is not None):
+      link2_len += 1
+      temp2 = temp2.next
+
+    diff = abs(link1_len - link2_len)
+    temp1 = link1.head
+    temp2 = link2.head
+    if(link2_len > link1_len):
+      while(diff > 0):
+        temp2 = temp2.next
+        diff -= 1
+    else:
+      while(diff > 0):
+        temp1 = temp1.next
+        diff -= 1
+
+    while(temp1 is not None and temp2 is not None):
+      if (temp1 == temp2):
+        return temp1
+      temp1 = temp1.next
+      temp2 = temp2.next
+
+    return None
 
 
