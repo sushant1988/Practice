@@ -216,4 +216,11 @@ class LinkList:
 
     return None
 
+  ''' Add two linklist with different length [1 -> 2 -> 3] and [4 -> 3]  123 + 43 =  
+  '''
+  @classmethod
+  def add_two_linklist(cls, link1, link2):
+    pass
+
+
 

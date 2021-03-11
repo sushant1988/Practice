@@ -110,7 +110,15 @@ class LinkListTest(unittest.TestCase):
     target_link = link1.find(3)
     link2.rear.next = target_link
     self.assertEqual(LinkList.find_intersection(link1, link2), target_link)
+  
+  def test_fn_add_linklist(self):
+    items1: list = [2, 4, 5, 7]
+    link1: LinkList = self.create_linklist_from_list(items1, False)
+    items2: list = [1, 2, 3]
+    link2: LinkList = self.create_linklist_from_list(items2, False)
 
+    link3: LinkList = LinkList.add_two_linklist(link1.head, link2.head)
+    self.assertEqual(link3.to_list(), [2, 5, 8, 0])
 
 if __name__ == '__main__':
   unittest.main()
