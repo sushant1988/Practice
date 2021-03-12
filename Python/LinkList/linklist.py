@@ -220,7 +220,23 @@ class LinkList:
   '''
   @classmethod
   def add_two_linklist(cls, link1, link2):
-    pass
+    l1 = link1.head
+    l2 = link2.head
 
+    s1 = s2 = 0
+    while l1 or l2:
+      if l1:
+        s1 = s1 * 10 + l1.data
+        l1 = l1.next
+      if l2:
+        s2 = s2 * 10 + l2.data
+        l2 = l2.next
+    
+    s = s1 + s2
 
+    link_nw = LinkList()
+    while(s > 0):
+      link_nw.insert_at_front(s%10)
+      s = s//10
 
+    return link_nw

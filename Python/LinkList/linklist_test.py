@@ -117,7 +117,7 @@ class LinkListTest(unittest.TestCase):
     items2: list = [1, 2, 3]
     link2: LinkList = self.create_linklist_from_list(items2, False)
 
-    link3: LinkList = LinkList.add_two_linklist(link1.head, link2.head)
+    link3: LinkList = LinkList.add_two_linklist(link1, link2)
     self.assertEqual(link3.to_list(), [2, 5, 8, 0])
 
 if __name__ == '__main__':
