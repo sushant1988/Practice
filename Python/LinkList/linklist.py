@@ -14,7 +14,7 @@ class LinkList:
   def to_list(cls, linklist):
     temp: LinkList = linklist.head
     lst = []
-    while(temp is not None):
+    while temp:
       lst.append(temp.data)
       temp = temp.next
 
@@ -53,7 +53,7 @@ class LinkList:
   def __str__(self):
     data=""
     temp = self.head
-    while(temp is not None):
+    while temp:
       data += str(temp.data) + "->"
       temp = temp.next
 
@@ -61,7 +61,7 @@ class LinkList:
 
   def find(self, data):
     temp = self.head
-    while(temp is not None and temp.data != data):
+    while temp and temp.data != data:
       temp = temp.next
 
     return temp
@@ -69,11 +69,20 @@ class LinkList:
   def to_list(self):
     temp = self.head
     lst = []
-    while(temp is not None):
+    while temp:
       lst.append(temp.data)
       temp = temp.next
 
     return lst
+
+  def linklist_len(self):
+    temp = self.head
+    length = 0
+    while temp:
+      length += 1
+      temp = temp.next
+
+    return length
 
   ''' Mth to Last Element in LinkList PIE Page 50
       Time Complexity: O(N)
@@ -84,14 +93,14 @@ class LinkList:
     p2: LinkList = self.head
 
     count = 0
-    while(p1 is not None and count < M):
+    while p1 and count < M:
       p1 = p1.next
       count += 1
 
     if count < M:
       return None
 
-    while(p1 is not None):
+    while p1:
       p2 = p2.next
       p1 = p1.next
 
@@ -102,11 +111,11 @@ class LinkList:
       Space Complexity: O(1) Constant
   '''
   def is_circular_list(self) -> bool:
-    if self.head is not None:
+    if self.head:
       slow: LinkList = self.head
       fast: LinkList = self.head.next
 
-      while(fast is not None and fast.next is not None):
+      while fast and fast.next:
         if (slow == fast or fast.next == slow):
           return True
         slow = slow.next
@@ -122,7 +131,7 @@ class LinkList:
     cur: LinkList = self.head
     next: LinkList = self.head.next
 
-    while(next is not None):
+    while next:
       cur.next = prev
       prev = cur
       cur = next
@@ -140,7 +149,7 @@ class LinkList:
     tail: LinkList = self.head
     temp:LinkList = self.head
 
-    while(temp is not None):
+    while temp:
       next: LinkList = temp.next
       if(temp.data < 5):
         temp.next = head
@@ -163,15 +172,15 @@ class LinkList:
     slow: LinkList = self.head
 
     stack: deque = deque()
-    while(fast is not None and fast.next is not None):
+    while fast and fast.next:
       stack.append(slow.data)
       fast = fast.next.next
       slow = slow.next
 
-    if fast is not None:
+    if fast:
       slow = slow.next
 
-    while (slow is not None):
+    while slow:
       if slow.data != stack.pop():
         return False
       slow = slow.next
@@ -187,12 +196,12 @@ class LinkList:
     temp2: LinkList = link2.head
 
     link1_len = 0
-    while(temp1 is not None):
+    while temp1:
       link1_len += 1
       temp1 = temp1.next
 
     link2_len = 0
-    while(temp2 is not None):
+    while temp2:
       link2_len += 1
       temp2 = temp2.next
 
@@ -208,7 +217,7 @@ class LinkList:
         temp1 = temp1.next
         diff -= 1
 
-    while(temp1 is not None and temp2 is not None):
+    while temp1 and temp2:
       if (temp1 == temp2):
         return temp1
       temp1 = temp1.next
@@ -216,7 +225,7 @@ class LinkList:
 
     return None
 
-  ''' Add two linklist with different length [1 -> 2 -> 3] and [4 -> 3]  123 + 43 =  
+  ''' Add two linklist with different length [1 -> 2 -> 3] and [4 -> 3]  123 + 43 =
   '''
   @classmethod
   def add_two_linklist(cls, link1, link2):
@@ -231,7 +240,7 @@ class LinkList:
       if l2:
         s2 = s2 * 10 + l2.data
         l2 = l2.next
-    
+
     s = s1 + s2
 
     link_nw = LinkList()
@@ -240,3 +249,10 @@ class LinkList:
       s = s//10
 
     return link_nw
+
+    @classmethod
+    def add_two_linklist_withlink(cls, link1, link2):
+      head1 = link.head
+      head2 = link2.head
+
+
