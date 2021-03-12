@@ -5,6 +5,21 @@ class LinkListNode:
       self.data = data
       self.next = None
 
+  def print(self):
+    temp = self
+    while temp:
+      print(temp.data, end="->")
+      temp = temp.next
+
+  def to_list(self) -> list:
+    result = []
+    temp = self
+    while temp:
+      result.append(temp.data)
+      temp = temp.next
+
+    return result
+
 class LinkList:
   def __init__(self):
       self.head = None
@@ -75,7 +90,7 @@ class LinkList:
 
     return lst
 
-  def linklist_len(self):
+  def length(self):
     temp = self.head
     length = 0
     while temp:
@@ -226,6 +241,7 @@ class LinkList:
     return None
 
   ''' Add two linklist with different length [1 -> 2 -> 3] and [4 -> 3]  123 + 43 =
+      limitation: can add number that can be represented by data type
   '''
   @classmethod
   def add_two_linklist(cls, link1, link2):
@@ -250,9 +266,77 @@ class LinkList:
 
     return link_nw
 
-    @classmethod
-    def add_two_linklist_withlink(cls, link1, link2):
-      head1 = link.head
-      head2 = link2.head
+  # add linklist of equal length  recursive
+  @classmethod
+  def add_two_linklist_equal_length(cls, head1: LinkListNode, head2: LinkListNode) -> (int, LinkListNode):
+    if not head1 and not head2:
+      return 0, None
+
+    carry, prev_node = LinkList.add_two_linklist_equal_length(head1.next, head2.next)
+
+    val = carry + head1.data + head2.data
+    cur_node = LinkListNode(val % 10)
+    cur_node.next = prev_node
+    nw_carry = val // 10
+
+    return nw_carry, cur_node
+
+  # propogate carry from remaining part of lengthy linklist
+  @classmethod
+  def propogate_carry(cls, head: LinkListNode, end_node: LinkListNode, node_to_attach: LinkListNode, org_carry: int):
+    if head.next == end_node:
+      val = org_carry + head.data
+      new_node = LinkListNode(val % 10)
+      new_node.next = node_to_attach
+      return val // 10, new_node
+
+    prev_carry, prev_node = LinkList.propogate_carry(head.next, end_node, node_to_attach, org_carry)
+
+    val = prev_carry + head.data
+    cur_node = LinkListNode(val % 10)
+    cur_node.next = prev_node
+
+    return val // 10, cur_node
+
+  ''' No Extra Space
+
+  '''
+  @classmethod
+  def add_two_linklist_variable(cls, link1, link2):
+    head1 = link1.head
+    head2 = link2.head
+
+    len1 = link1.length()  # O(N)
+    len2 = link2.length() # O(N)
+
+    carry, new_node = 0, None
+    if (len2 == len1):
+      carry, new_node = LinkList.add_two_linklist_equal_length(temp, head2) # O(N)
+    else:
+      # always first head1 is greater than head2 otherwise swap
+      diff = abs(len1 - len2) # O(Diff)
+      if len2 > len1:
+        temp = head1
+        head1 = head2
+        head2 = head1
+
+      last_node_long_list = temp = head1
+
+      while diff > 0:
+          temp = temp.next
+          last_node_long_list = temp
+          diff -= 1
+
+      new_carry, node = LinkList.add_two_linklist_equal_length(temp, head2) # O(N)
+      carry, new_node = LinkList.propogate_carry(head1, last_node_long_list, node, new_carry) # O(Diff)
+
+    if carry > 0:
+      nw_node = LinkListNode(carry)
+      nw_node.next = new_node
+      new_node = nw_node
+
+    return new_node
+
+
 
 
