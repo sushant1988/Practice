@@ -6,21 +6,23 @@ import sys
 CTC 3.2
 '''
 class StackWithMin:
-  stack_min: deque = deque  # doubly linklist has all list operations
-  stack_item: Queue = None   # FIFO Queue
+  stack_min: deque = deque()  # doubly linklist has all list operations
+  stack_item: deque = None   # FIFO Queue
 
   def __init__(self):
-    self.stack_item = Queue()
+    self.stack_item = deque()
 
-  def put(self, element):
-    self.stack_item.put(element)
+  def push(self, element):
+    self.stack_item.append(element)
     if element <= self.min():
       self.stack_min.append(element)
 
   def pop(self):
-    pop_element = self.stack_item.get()
-    if pop_element == min():
+    pop_element = self.stack_item.pop()
+    if pop_element == self.min():
       self.stack_min.pop()
+
+    return pop_element
 
   def min(self):
     if len(self.stack_min) == 0:
@@ -29,10 +31,10 @@ class StackWithMin:
     return self.stack_min[-1]
 
   def peek(self):
-    if(len(self.stack_item) != 0):
+    if not self.is_empty():
       return self.stack_item[-1]
 
-    else return None
+    return None
 
   def is_empty(self):
     return len(self.stack_item) == 0
@@ -57,7 +59,8 @@ class MyQueue:
 
   def pop(self):
     self.stack_shift()
-    self.stack_old.pop()
+    return self.stack_old.pop()
+
 
   def stack_shift(self):
     if len(self.stack_old) == 0:
@@ -67,7 +70,7 @@ class MyQueue:
 
   def peek(self):
     self.stack_shift()
-    self.stack_old[-1]
+    return self.stack_old[-1]
 
   def is_empty(self):
     return self.size() == 0
@@ -89,4 +92,6 @@ def sort_stack(stack: StackWithMin):
   #move everything from r to s
   while(not r.is_empty()):
     stack.push(r.pop())
+
+  return stack
 
