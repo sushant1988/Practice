@@ -1,8 +1,7 @@
 class BinaryNode:
   def __init__(self, data):
     self.data = data
-    self.left = None
-    self.right = None
+    self.left = self.right = None
 
 
 class N_AryNode:
