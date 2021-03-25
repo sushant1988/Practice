@@ -38,6 +38,134 @@ class BinaryTree:
     pre_order(self.root)
     pass
 
+  def post_order_recursive(self):
+    def post_order(root: BinaryNode):
+      if root:
+        post_order(root.left)
+        post_order(root.right)
+        print(root.data, end= " ")
+    post_order(self.root)
+    pass
+
+  def pre_order_iterative(self):
+    stack: deque = deque()
+    stack.append(self.root)
+    while(len(stack) > 0):
+      temp = stack.pop()
+      if temp.right: stack.append(temp.right)
+      if temp.left: stack.append(temp.left)
+      print(temp.data, end=" ")
+    pass
+
+  '''
+  0 mean not yet processed
+  1 mean processed
+  '''
+  def in_order_iterative(self):
+    stack: deque = deque()
+    stack.append((self.root.right, 0))
+    stack.append((self.root, 1))
+    stack.append((self.root.left, 0))
+    while(len(stack) > 0):
+      temp: tuple(BinaryNode, int) = stack.pop()
+      if (temp[1] > 0):
+        print(temp[0].data, end=" ")
+      else:
+        if temp[0].right: stack.append((temp[0].right, 0))
+        stack.append((temp[0], 1))
+        if temp[0].left: stack.append((temp[0].left, 0))
+    pass
+
+  def post_order_iterative(self):
+    stack: deque = deque()
+    stack.append((self.root, 1))
+    stack.append((self.root.right, 0))
+    stack.append((self.root.left, 0))
+    while(len(stack) > 0):
+      temp: tuple(BinaryNode, int) = stack.pop()
+      if (temp[1] > 0):
+        print(temp[0].data, end=" ")
+      else:
+        stack.append((temp[0], 1))
+        if temp[0].right: stack.append((temp[0].right, 0))
+        if temp[0].left: stack.append((temp[0].left, 0))
+    pass
+
+  '''
+    O(N) where n is number of nodes in tree
+    space O(N) due to recursive solution
+  '''
+  def max_height(self) -> int:
+    def max_height(node: BinaryNode):
+      if not node:
+        return 0
+
+      return max(max_height(node.left), max_height(node.right)) + 1
+
+    return max_height(self.root)
+
+  '''
+    O(N) solution to iterative all nodes. O(N) space to use queue
+  '''
+  def height_iterative(self) -> int:
+    queue: deque = deque()
+    queue.append(self.root)
+    height = 0
+    while True:
+      nodeCount = len(queue)
+      if nodeCount == 0:
+        return height
+
+      height += 1
+      while(nodeCount > 0):
+        temp = queue.popleft()
+        if temp.left: queue.append(temp.left)
+        if temp.right: queue.append(temp.right)
+        nodeCount -= 1
+    return 0
+
+
+
+  '''
+  O(N2) worst case
+  '''
+  def is_balanced(self) -> bool:
+    def height(node: BinaryNode)-> int:
+      if not node:
+        return 0
+      return max(height(node.left), height(node.right)) + 1
+
+    def is_balanced(node: BinaryNode) -> bool:
+      if not node:
+        return True
+      lhs = height(node.left)
+      rhs = height(node.right)
+      return (abs(lhs - rhs) <= 1) and is_balanced(node.left) and is_balanced(node.right)
+
+    return is_balanced(self.root)
+
+  '''
+  O(N) height in the same recusion rather than calling height
+  A balanced binary tree, also referred to as a height-balanced binary tree,
+  is defined as a binary tree in which the height of the left and right subtree of any node differ by not more than 1.
+  '''
+  def is_balanced_optimized(self):
+    def is_balanced_optimized(node: BinaryNode)-> (int, bool):
+      if not node:
+        return 0, True
+
+      lhs, l_balance = is_balanced_optimized(node.left)
+      rhs, r_balance = is_balanced_optimized(node.right)
+
+      # if left or right subtree is not balanced no need to calculate height or anything else
+      if l_balance and r_balance:
+        return max(lhs, rhs) + 1, abs(lhs-rhs) <= 1
+
+      return 0, False
+
+    height, is_balance = is_balanced_optimized(self.root)
+    return is_balance
+
   def print_level_order(self):
     queue: deque = deque()
     queue.append(self.root)
@@ -46,14 +174,27 @@ class BinaryTree:
       print(temp.data, end=" ")
       if temp.left:  queue.append(temp.left)
       if temp.right: queue.append(temp.right)
-
     pass
 
 
 if __name__ == '__main__':
-  items=[1,2,3,4,5,0,7,8, 0, 12]
+  items=[1,2,3,4,5,0,0,8, 0, 12]
   tree = BinaryTree()
   tree.create_binary_tree_from_array_recursive(items)
-  #tree.pre_order_recursive()
-  tree.print_level_order()
+  tree.pre_order_recursive()
+  print("")
+  tree.pre_order_iterative()
+  print("")
+  tree.in_order_recursive()
+  print("")
+  tree.in_order_iterative()
+  print("")
+  tree.post_order_recursive()
+  print("")
+  tree.post_order_iterative()
+  print("")
+
+  print("Max Height ", tree.max_height())
+  print("Max Height ", tree.height_iterative())
+  print(tree.is_balanced_optimized())
 
