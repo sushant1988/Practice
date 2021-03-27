@@ -1,5 +1,6 @@
 from tree_node import BinaryNode
 from collections import deque
+import sys
 
 class BinaryTree:
   def __init__(self):
@@ -76,6 +77,10 @@ class BinaryTree:
         if temp[0].left: stack.append((temp[0].left, 0))
     pass
 
+  def in_order_iterative_withoutstate(self):
+    stack = deque()
+
+
   def post_order_iterative(self):
     stack: deque = deque()
     stack.append((self.root, 1))
@@ -124,8 +129,6 @@ class BinaryTree:
         nodeCount -= 1
     return 0
 
-
-
   '''
   O(N2) worst case
   '''
@@ -144,7 +147,7 @@ class BinaryTree:
 
     return is_balanced(self.root)
 
-  '''
+  ''' CTC 4.4
   O(N) height in the same recusion rather than calling height
   A balanced binary tree, also referred to as a height-balanced binary tree,
   is defined as a binary tree in which the height of the left and right subtree of any node differ by not more than 1.
@@ -155,10 +158,12 @@ class BinaryTree:
         return 0, True
 
       lhs, l_balance = is_balanced_optimized(node.left)
+      if not l_balance: return 0, False # if any of subtree is not balance don;t check other side
+
       rhs, r_balance = is_balanced_optimized(node.right)
 
       # if left or right subtree is not balanced no need to calculate height or anything else
-      if l_balance and r_balance:
+      if r_balance:
         return max(lhs, rhs) + 1, abs(lhs-rhs) <= 1
 
       return 0, False
@@ -176,6 +181,21 @@ class BinaryTree:
       if temp.right: queue.append(temp.right)
     pass
 
+  ''' CTC 4.5 check if Binary tree is BST
+      time complexity: O(N) due to recusion space complexity will be O(log N) in balanced tree
+  '''
+  def check_if_bst(self):
+    def check_if_bst(node: BinaryNode, min, max):
+      if node:
+        if node.data < min or node.data > max:
+          return False
+
+        if not check_if_bst(node.left, min, node.data) or not check_if_bst(node.right, node.data, max):
+          return False
+
+      return True
+
+    return check_if_bst(self.root, -sys.maxsize+1, sys.maxsize)
 
 if __name__ == '__main__':
   items=[1,2,3,4,5,0,0,8, 0, 12]
@@ -197,4 +217,9 @@ if __name__ == '__main__':
   print("Max Height ", tree.max_height())
   print("Max Height ", tree.height_iterative())
   print(tree.is_balanced_optimized())
+  items = [1,2,3,4,5,6,7]
+  tree = BinaryTree()
+  tree.create_binary_tree_from_array_recursive(items)
+  tree.in_order_iterative()
+  print(tree.check_if_bst())
 
