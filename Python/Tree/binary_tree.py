@@ -77,9 +77,31 @@ class BinaryTree:
         if temp[0].left: stack.append((temp[0].left, 0))
     pass
 
+  '''
+    // Inorder Traversal without recursion without any map
+    //) Create an empty stack S.
+    /*2) Initialize current node as root
+    3) Push the current node to S and set current = current->left until current is NULL
+    4) If current is NULL and stack is not empty then
+        a) Pop the top item from stack.
+        b) Print the popped item, set current = current->right
+        c) Go to step 3.
+    5) If current is NULL and stack is empty then we are done.*/
+  '''
   def in_order_iterative_withoutstate(self):
     stack = deque()
-
+    current = self.root
+    while True:
+      if current:
+        stack.append(current)
+        current = current.left
+      else:
+        if len(stack) > 0:
+          node = stack.pop()
+          print(node, end=" ")
+          current = node.right
+        else :
+          return
 
   def post_order_iterative(self):
     stack: deque = deque()
@@ -197,6 +219,64 @@ class BinaryTree:
 
     return check_if_bst(self.root, -sys.maxsize+1, sys.maxsize)
 
+  '''
+  with out min and max value
+  '''
+  def check_if_bst_alternative(self):
+    def check_bst(node: BinaryNode):
+      if node is None:
+        return True
+
+      if node.left and node.left.data > node.data:
+        return False
+      if node.right and node.right.data < node.data:
+        return False
+
+      return check_bst(node.left) and check_bst(node.right)
+
+  ''' How to find common ancestor in Binary Tree
+    O(N) time complexity due to recursion O(N) space complexity
+  '''
+  def find_common_ancestor(self, p, q):
+    def find_common_ancestor(node:BinaryNode, p: int, q: int):
+      if node is None:
+        return None
+
+      if node.data == p or node.data == q:
+        return node
+
+      l = find_common_ancestor(node.left, p, q)
+      r = find_common_ancestor(node.right, p, q)
+
+      # if l and r: return node
+      # return l if l else r
+      return node if l and r else l if l else r  # same as above statement
+
+  ''' Find inorder_successor in Binary Tree
+      time complexity O(N) recursive
+  '''
+  def find_inorder_successor(self, target):
+    def find_inorder_successor(node, target, parent):
+      if not node:
+        return None
+
+      if node.data == target:
+        if node.right:
+          # finding successor on right subtree which will be
+          # left most node in right subtree
+          temp = node.right
+          while temp.left:
+            temp = temp.left
+          return temp
+        else :
+          return parent
+
+      left = find_inorder_successor(node.left, target, node)
+      if left: return left
+      return find_inorder_successor(node.right, target, parent)
+
+
+
 if __name__ == '__main__':
   items=[1,2,3,4,5,0,0,8, 0, 12]
   tree = BinaryTree()
@@ -221,5 +301,7 @@ if __name__ == '__main__':
   tree = BinaryTree()
   tree.create_binary_tree_from_array_recursive(items)
   tree.in_order_iterative()
+  print()
+  tree.in_order_iterative_withoutstate()
   print(tree.check_if_bst())
 
