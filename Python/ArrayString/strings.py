@@ -170,6 +170,25 @@ def string_compression(input: str):
 
   return res
 
+'''
+permutation of string
+Time Complexity: O(N!)
+'''
+def permutation_of_elements(input: str):
+  results = []
+  def permutation(input: list, l, r):
+    if l == r:
+      results.append(list(input))
+      return
+
+    for i in range(l, r):
+      input[l], input[i] = input[i], input[l] # swap the position
+      permutation(input, l+1, r)
+      input[l], input[i] = input[i], input[l] # backtrack
+
+  permutation(list(input), 0, len(input))
+  return ["".join(p) for p in results]
+
 
 
 if __name__ == '__main__':
@@ -182,5 +201,7 @@ if __name__ == '__main__':
   print(check_if_string_one_edit_away("pale", "pele"))
 
   print(string_compression("aaabbccaa"))
+
+  print(permutation_of_elements('ABC'))
 
   pass
