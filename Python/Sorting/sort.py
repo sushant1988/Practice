@@ -1,3 +1,5 @@
+import sys
+
 '''
 /* Time Complexity = O(N^2)
 	 * Space Complexity = O(1) Constant
@@ -198,6 +200,81 @@ def search_sorted_array_with_empty_strings(words: list, target: str, left, right
   else:
     return search_sorted_array_with_empty_strings(words, target, mid + 1, right)
 
+''' CTC 10.11 Peaks and Valley
+Time Complexity O(N)
+take group of 3 elements and fix them up where middle element should be greater than adjecent..
+'''
+def sort_valley_peak(elements: list):
+  def MaxIndex(elem: list, a, b, c):
+    size = len(elem)
+    a_val = elem[a] if a >= 0 and a < size else -sys.maxsize
+    b_val = elem[b] if b >= 0 and b < size else -sys.maxsize
+    c_val = elem[c] if c >= 0 and c < size else -sys.maxsize
+
+    max_elem = max(a_val, max(b_val, c_val))
+    return a if max_elem == a_val else b if max_elem == b_val else c
+
+  for i in range(1, len(elements), 2):
+    biggest_number_index = MaxIndex(elements, i, i-1 , i+1)
+    if i != biggest_number_index:
+      elements[i], elements[biggest_number_index] = elements[biggest_number_index], elements[i] # swap both index
+
+
+''' 10.4 Search in sorterd array without given size of array
+first find the size of array in O(log n) from low to high
+then search using binary search
+'''
+def search_binary(lst: list, target: int):
+  def binary_search(lst, target, low, high):
+    while low <= high:
+      mid = (low + high) // 2
+      if lst[mid] > target or lst[mid] == -1:
+        high = mid - 1
+      elif lst[mid] < target:
+        low = mid + 1
+      else:
+        return mid
+    return -1
+
+  idx = 1
+  while list[idx] != -1 and lst[idx] < target:
+    idx *= 2
+
+  return binary_search(list, target, idx/2, idx)
+
+''' 10.3 Search in sorted rotated array.
+'''
+def search_rotated_array(arr: list, left: int, right: int , target: int):
+  mid = (left + right) // 2
+  if arr[mid] == target:
+    return mid
+
+  if right < left :
+    return -1
+
+  ''' Either the left or right half must normally ordered. Find out which side is normally ordered.
+      user normally order side to figure out which side to search to find target.
+      Time Complexity = O(log N)
+  '''
+  if arr[left] < arr[mid]:  # left is normally ordered
+    if arr[left] <= target and arr[mid] > target:
+      return search_rotated_array(arr, left, mid-1, target)
+    else:
+      return search_rotated_array(arr, mid+1, right, target)
+  elif arr[mid] < arr[left]: # right is normally ordered
+    if arr[mid] <= target and arr[right] > target:
+      return search_rotated_array(arr, mid+1, right, target) # search right
+    else:
+      return search_rotated_array(arr, left, mid-1, target) # search left
+  elif arr[mid] == arr[left]: # left and right all are repeat
+    if arr[mid] != arr[right]: # all right are different
+      return search_rotated_array(arr, mid+1, right, target) # search on right side
+    else:
+      result = search_rotated_array(arr, left, mid-1, target)
+      if result == -1:
+        return search_rotated_array(arr, mid+1, right, target)
+      return result
+  return -1
 
 
 if __name__ == '__main__':
@@ -205,3 +282,4 @@ if __name__ == '__main__':
   words = ['cat', 'hello', 'oby', 'act', 'yob']
 
   print(group_anagrams(words))
+
