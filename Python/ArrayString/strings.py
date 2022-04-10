@@ -189,6 +189,24 @@ def permutation_of_elements(input: str):
   permutation(list(input), 0, len(input))
   return ["".join(p) for p in results]
 
+''' Flatten 2d array with variable len of array to single array column wise
+    Time Comlexity : O(N) where N is number elements in all the list
+'''
+def flatten_n_list_2d_array(arr:list):
+  # use array of index which will maintain the index of arary at each index of original array.
+  idx_arr: list = [0] * len(arr)
+  result = []
+  reached = True
+  while reached:
+    reached = False
+    for i in range (len(idx_arr)):
+      if idx_arr[i] <  len(arr[i]):
+        result.append(arr[i][idx_arr[i]])
+        reached = True
+        idx_arr[i] += 1
+
+  return result
+
 
 
 if __name__ == '__main__':

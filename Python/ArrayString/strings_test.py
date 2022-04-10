@@ -70,6 +70,13 @@ class StringsTest(unittest.TestCase):
       break
     pass
 
+  def test_flatten_n_list_2d_array(self):
+    input_arr = [[1, 2, 3], [4, 5], [6], [7, 8, 9, 10], []]
+    expected_output = [1, 4, 6, 7, 2, 5, 8, 3, 9, 10]
+
+    self.assertEqual(flatten_n_list_2d_array(input_arr), expected_output)
+    pass
+
 if __name__ == '__main__':
   unittest.main()
 
